@@ -71,15 +71,17 @@ const User = () => {
             const index = editpost.findIndex(post => post.id === +id);
             editpost.splice(index,1,updata);
             setPosts(editpost);
-            setFetched(true)
+            setFetched(true);
+            evt.target.reset()
         }
-        evt.target.reset();
+       if(fetched){
+        
+       }
      
     }
     
   
     if (fetched) {
-       
         const post = postData.find(post => post.id == id);
         return(
            <div className="div">
@@ -102,7 +104,6 @@ const User = () => {
           <button>Submit</button>
       </form>
             <h3>title : {post.title}</h3>
-           
             </div>
         )
     }
@@ -130,7 +131,6 @@ const User = () => {
           <button>Submit</button>
       </form>
              <h3>title : {post.title}</h3>
-             
              </div>
          )
      }

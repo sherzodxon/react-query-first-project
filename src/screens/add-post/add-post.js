@@ -3,11 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {todosApi, getTodo, postTodo, putTodo, delTodo } from "../../api/todosApi";
 const AddPost =()=>{
-    const [newPost, setNewPost]=useState("");
+    const [fetch, setfetch]=useState(false);
     const queryClient =useQueryClient();
     const titleRef =useRef();
     const bodyRef =useRef();
-    let [post, setPost] = useState([])
+    const [showposts , setShowposts]=useState([])
     const {
         isLoading:loading,
         isError,
@@ -21,21 +21,7 @@ const AddPost =()=>{
         }
     })
 
-    const updateMutation = useMutation(putTodo, {
-        onSuccess:()=>{
-           queryClient.invalidateQueries(["posts"])
-        }
-    })
-    const {data:updata,isLoading:uploading} = updateMutation;
-
-    function updateClick(){
-        updateMutation.mutate({
-            id:1,
-            title:"sherzod",
-        })
-
-    }
-
+   
 
 const delMutation = useMutation(delTodo, {
     onSuccess:()=>{
@@ -60,25 +46,32 @@ delMutation.mutate({
 
         addPostMutation.mutate({
         userId:1,
-    
         title:titleValue,
         body:bodyValue
     })
-    setNewPost("");
+    
   
     }
    const {isLoading ,data ,isSuccess}=addPostMutation
 
+
+// if(data && !isLoading){
+//     posts.splice(0,0,data);
+//     console.log(posts);
+//     // setShowposts(posts)
+//     // setfetch(true)
+// }
+
+
 useEffect(()=>{
 if(isSuccess){
-    setPost([
-        data,
-        ...posts
-    ])
+    posts.splice(100,0,data);
+    setShowposts(posts);
+    setfetch(true)
 }
 },[isSuccess]);
 
- 
+//  console.log(showposts);
 if(loading){
     return(
         <h1>Loading...</h1>
@@ -104,14 +97,17 @@ if(loading){
                  />
             </div>
             <button>Submit</button>
-        </form>
-        <button onClick={updateClick}>Patch</button>
+        </form> 
         <button onClick={delClick}>Delete</button>
-        {posts.map(post=>(
+        { fetch? showposts.map(post=>(
             <div key={post.id} className="div">
             <Link  to={`/user/${post.id}`}>{post.title}</Link>
             </div>
-        ))}
+        )) :posts.map(post=>(
+            <div key={post.id} className="div">
+            <Link  to={`/user/${post.id}`}>{post.title}</Link>
+            </div>
+        )) }
 
         </>
     )

@@ -9,7 +9,7 @@ export const Home=()=>{
 
   if(isLoading){
     return(
-        <p>Loading...</p>
+        <h1>Loading...</h1>
     )
   }
     return(
